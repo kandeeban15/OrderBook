@@ -19,7 +19,7 @@ void writeMessagesToFile(const std::string& filename) {
         std::cerr << "Failed to open CSV file for messages." << std::endl;
         return;
     }
-
+    csvFile<<"ClientOrderID,OrderID,Instrument,BuyOrSell,ExecStatus,Quantity,Price"<<std::endl;
 
     std::unique_lock<std::mutex> lock(mtx_queue);
     while (true) {
@@ -112,7 +112,7 @@ int main() {
         ss >> order.limit;
         auto it = std::find(instruments.begin(), instruments.end(), instrument);
         if(it == instruments.end()){
-            messageQueue_print.push(std::make_unique<std::string>("---," + order.clientOrderId + ",InvalidInstrument," + buyOrSellString + ",Reject," + std::to_string(order.shares) + "," + std::to_string(order.limit) + "\n"));
+            messageQueue_print.push(std::make_unique<std::string>("---," + order.clientOrderId + ",InvalidInstrument," + std::to_string(order.buyOrSell) + ",Reject," + std::to_string(order.shares) + "," + std::to_string(order.limit) + "\n"));
         }
 
         manager.getOrderQueue(instrument).push(order);
